@@ -29,26 +29,26 @@ public class DataLoader implements CommandLineRunner {
         Role adminRole = roleRepository.findByRole("ADMIN");
         Role userRole = roleRepository.findByRole("USER");
 
-        User user = new User("jim@jim.com", "password", "Jim", "Jimmerson",
+        User user1 = new User("jim@jim.com", "password", "Jim", "Jimmerson",
                 true, "jim");
-        user.setRoles(Arrays.asList(userRole));
-        userRepository.save(user);
+        user1.setRoles(Arrays.asList(userRole));
+        userRepository.save(user1);
 
-        user = new User("admin@admin.com", "password", "Admin", "User",
+        User user2 = new User("admin@admin.com", "password", "Admin", "User",
                 true, "admin");
-        user.setRoles(Arrays.asList(adminRole));
-        userRepository.save(user);
+        user2.setRoles(Arrays.asList(adminRole));
+        userRepository.save(user2);
 
-        Message message = new Message("asdfsdf", "dfgdfgd", "Zen");
-        message.setUser(user);
+        Message message = new Message("asdfsdf", "dfgdfgd");
+        message.setUser(user1);
         messageRepository.save(message);
 
-        message = new Message("rtyfghj", "vbnbffg", "God");
-        message.setUser(user);
+        message = new Message("rtyfghj", "vbnbffg");
+        message.setUser(user2);
         messageRepository.save(message);
 
-        message = new Message("bcvfger", "erterggde", "Boss");
-        message.setUser(user);
+        message = new Message("bcvfger", "erterggde");
+        message.setPostedBy("Tom");
         messageRepository.save(message);
     }
 }

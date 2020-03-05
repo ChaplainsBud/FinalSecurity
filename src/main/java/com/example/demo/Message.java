@@ -29,17 +29,21 @@ public class Message {
     private User user;
 
 
-    public Message(@NotNull String content, @NotNull String title, String postedBy) {
+//    public Message(@NotNull String content, @NotNull String title, String postedBy) {
+//        this.content = content;
+//        this.title = title;
+//        this.postedBy = postedBy;
+//    }
+
+    public Message(@NotNull String content, @NotNull String title, User user) {
         this.content = content;
         this.title = title;
-        this.postedBy = postedBy;
+        this.user = user;
     }
 
-    public Message(@NotNull String content, @NotNull String title, String pic, String postedBy) {
+    public Message(@NotNull String content, @NotNull String title) {
         this.content = content;
         this.title = title;
-        this.pic = pic;
-        this.postedBy = postedBy;
     }
 
     public String getPic() {
