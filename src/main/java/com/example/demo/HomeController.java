@@ -31,6 +31,9 @@ public class HomeController {
     @RequestMapping("/")
     public String listMessages(Model model) {
         model.addAttribute("messages", messageRepository.findAll());
+        if (userService.getUser() != null) {
+            model.addAttribute("user_id", userService.getUser().getId());
+        }
         return "index";
     }
 
@@ -38,8 +41,32 @@ public class HomeController {
 //    public String index() {
 //        return "index";
 //    }
+    @GetMapping("/register")
+    public String showRegistrationPage(Model model) {
+        model.addAttribute("user", new User());
+        return "registration";
+    }
+
+    @PostMapping("/register")
+    public String processRegistrationPage(@Valid @ModelAttribute("user") User user, BindingResult result,
+                                          Model model) {
+        model.addAttribute("user", user);
+        if (result.hasErrors())
+        {
+            return "registration";
+        }
+        else
+        {
+            userService.saveUser(user);
+            model.addAttribute("message", "User Account Created");
+        }
+        return "index";
+    }
+
     @GetMapping("/add")
-    public String messageForm(Model model) {
+    public String messageForm(Principal principal, Model model) {
+        String username = principal.getName();
+        model.addAttribute("user", userRepository.findByUsername(username));
         model.addAttribute("message", new Message());
         return "messageform";
     }
@@ -71,5 +98,23 @@ public class HomeController {
         String username = principal.getName();
         model.addAttribute("user", userRepository.findByUsername(username));
         return "secure";
+    }
+
+    @RequestMapping("/detail/{id}")
+    public String showMessage(@PathVariable("id") long id, Model model) {
+        model.addAttribute("message", messageRepository.findById(id).get());
+        return "show";
+    }
+
+    @RequestMapping("/update/{id}")
+    public String updateMessage(@PathVariable("id") long id, Model model) {
+        model.addAttribute("message", messageRepository.findById(id).get());
+        return "messageform";
+    }
+
+    @RequestMapping("/delete/{id}")
+    public String delMessage(@PathVariable("id") long id) {
+        messageRepository.deleteById(id);
+        return "redirect:/";
     }
 }

@@ -12,13 +12,15 @@
 <form action="#" th:action="@{/process}" th:object="${message}" method="post" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}"/>
 
+    Title :<input type="text" th:field="*{title}" />
+    <span th:if="${#fields.hasErrors('title')}"
+          th:errors="*{title}"></span><br />
+
     Content :<textarea rows="5" th:field="*{content}"/>
     <span th:if="${#fields.hasErrors('content')}"
           th:errors="*{content}"></span><br/>
 
-    <!--            Sent By :<input type="text" th:field="*{sentBy}" />-->
-    <!--            <span th:if="${#fields.hasErrors('sentBy')}"-->
-    <!--                  th:errors="*{sentBy}"></span><br />-->
+
 
     <!--            Date :<input type="date" th:field="*{postedDate}" />-->
     <!--            <span th:if="${#fields.hasErrors('postedDate')}"-->

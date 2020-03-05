@@ -11,6 +11,9 @@ import java.util.Arrays;
 public class DataLoader implements CommandLineRunner {
 
     @Autowired
+    MessageRepository messageRepository;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -35,5 +38,17 @@ public class DataLoader implements CommandLineRunner {
                 true, "admin");
         user.setRoles(Arrays.asList(adminRole));
         userRepository.save(user);
+
+        Message message = new Message("asdfsdf", "dfgdfgd", "Zen");
+        message.setUser(user);
+        messageRepository.save(message);
+
+        message = new Message("rtyfghj", "vbnbffg", "God");
+        message.setUser(user);
+        messageRepository.save(message);
+
+        message = new Message("bcvfger", "erterggde", "Boss");
+        message.setUser(user);
+        messageRepository.save(message);
     }
 }

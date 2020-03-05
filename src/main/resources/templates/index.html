@@ -1,35 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
 
 <body>
+<nav class="navbar navbar-expand-lg navbar-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav nav-fill">
+
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <div sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                    <a class="nav-link" href="/add">Add New Message</a>
+                </li>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Logout</a>
+                </li>
+            </div>
+        </ul>
+    </div>
+</nav>
+
 <h1>Message List</h1>
-<a href="/add">Add a Message</a><br/>
+<!--<a href="/add">Add a Message</a><br/>-->
 <table>
     <tr>
+        <th>Title&nbsp;&nbsp;&nbsp;</th>
         <th>Content&nbsp;&nbsp;&nbsp;</th>
-        <th>Sent By&nbsp;&nbsp;&nbsp;</th>
-        <th>Posted Date&nbsp;&nbsp;&nbsp;</th>
+        <th>Posted By&nbsp;&nbsp;&nbsp;</th>
         <td>Actions</td>
     </tr>
     <tr th:each="message : ${messages}">
         <td th:text="${message.title}"></td>
         <td th:text="${message.content}"></td>
         <td th:text="${message.postedBy}"></td>
-        <td th:text="${message.postedDate}"></td>
-        <div th:if="${message.pic} !=null">
+        <div th:if="${message.pic} != null">
             <img th:src="${message.pic}"/><br/>
         </div>
+
+        <div sec:authorize="hasAuthority('USER')">
         <td>
             <a th:href="@{/update/{id}(id=${message.id})}">Update</a>
             <a th:href="@{/detail/{id}(id=${message.id})}">Details</a>
             <a th:href="@{/delete/{id}(id=${message.id})}">Delete</a>
         </td>
+        </div>
     </tr>
 </table>
 

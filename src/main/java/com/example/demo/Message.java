@@ -1,9 +1,6 @@
 package com.example.demo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -15,17 +12,35 @@ public class Message {
     private long id;
 
     @NotNull
-    @Size(min = 3)
+//    @Size(min = 3)
     private String content;
 
     //    private String postedDate;
     @NotNull
-    @Size(min = 3)
+//    @Size(min = 3)
     private String title;
 
     private String postedBy;
 
     private String pic;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+    public Message(@NotNull String content, @NotNull String title, String postedBy) {
+        this.content = content;
+        this.title = title;
+        this.postedBy = postedBy;
+    }
+
+    public Message(@NotNull String content, @NotNull String title, String pic, String postedBy) {
+        this.content = content;
+        this.title = title;
+        this.pic = pic;
+        this.postedBy = postedBy;
+    }
 
     public String getPic() {
         return pic;
@@ -76,5 +91,13 @@ public class Message {
 
     public void setPostedBy(String postedBy) {
         this.postedBy = postedBy;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
