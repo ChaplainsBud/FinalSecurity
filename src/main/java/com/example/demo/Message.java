@@ -20,43 +20,44 @@ public class Message {
 //    @Size(min = 3)
     private String title;
 
-    private String postedBy;
+//    private String postedBy;
 
-    private String pic;
+//    private String pic;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-
-//    public Message(@NotNull String content, @NotNull String title, String postedBy) {
-//        this.content = content;
-//        this.title = title;
-//        this.postedBy = postedBy;
-//    }
-
-    public Message(@NotNull String content, @NotNull String title, User user) {
-        this.content = content;
-        this.title = title;
-        this.user = user;
+    public Message() {
+        user = new User();
     }
 
     public Message(@NotNull String content, @NotNull String title) {
         this.content = content;
         this.title = title;
+//        this.postedBy = postedBy;
     }
 
-    public String getPic() {
-        return pic;
-    }
 
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
+//    public Message(@NotNull String content, @NotNull String title, User user) {
+//        this.content = content;
+//        this.title = title;
+//        this.user = user;
+//    }
+//
+//    public Message(@NotNull String content, @NotNull String title) {
+//        this.content = content;
+//        this.title = title;
+//    }
 
-    public Message() {
+//    public String getPic() {
+//        return pic;
+//    }
+//
+//    public void setPic(String pic) {
+//        this.pic = pic;
+//    }
 
-    }
 //    public Message(@NotNull @Size(max = 280) String content, Date postedDate,
 //                   @NotNull @Size(min = 2) String sentBy) {
 //        this.content = content;
@@ -89,13 +90,13 @@ public class Message {
         this.title = title;
     }
 
-    public String getPostedBy() {
-        return postedBy;
-    }
-
-    public void setPostedBy(String postedBy) {
-        this.postedBy = postedBy;
-    }
+//    public String getPostedBy() {
+//        return postedBy;
+//    }
+//
+//    public void setPostedBy(String postedBy) {
+//        this.postedBy = postedBy;
+//    }
 
     public User getUser() {
         return user;

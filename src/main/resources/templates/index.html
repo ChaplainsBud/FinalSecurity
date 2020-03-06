@@ -52,9 +52,10 @@
     <tr th:each="message : ${messages}">
         <td th:text="${message.title}"></td>
         <td th:text="${message.content}"></td>
-        <td th:text="${message.postedBy}"></td>
-        <div th:if="${message.pic} != null">
-            <img th:src="${message.pic}"/><br/>
+        <td th:text="${message.user.username}"></td>
+
+<!--        <div th:if="${message.pic} != null">-->
+<!--            <img th:src="${message.pic}"/><br/>-->
         </div>
 
         <div sec:authorize="hasAuthority('USER')">

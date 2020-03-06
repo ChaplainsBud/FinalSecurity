@@ -5,6 +5,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="User_Data")
@@ -32,14 +34,15 @@ public class User {
     private String username;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(joinColumns = @JoinColumn(name = "user_id"),
-           inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
-    @OneToMany(mappedBy = "user")
-    public Collection<Message> messages;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Message> messages;
 
     public User() {
+        roles = new HashSet<>();
+        messages = new HashSet<>();
     }
 
     public User(String email, String password, String firstName, String lastName, boolean enabled, String username) {
@@ -116,11 +119,11 @@ public class User {
         this.roles = roles;
     }
 
-    public Collection<Message> getMessages() {
+    public Set<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(Collection<Message> messages) {
+    public void setMessages(Set<Message> messages) {
         this.messages = messages;
     }
 }

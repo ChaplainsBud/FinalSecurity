@@ -10,8 +10,8 @@
     <a href="/">Show All Messages</a><br />
     <a href="/add">Add a Message</a><br />
     Content :<span th:text="${message.content}" ></span><br />
-    Sent By :<span th:text="${message.postedBy}" ></span><br />
-    Picture :<span th:text="${message.pic}" ></span><br />
+    Sent By :<span th:text="${message.user.username}" ></span><br />
+<!--    Picture :<span th:text="${message.pic}" ></span><br />-->
     <a th:href="@{/delete/{id}(id=${message.id})}">Delete this message</a>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

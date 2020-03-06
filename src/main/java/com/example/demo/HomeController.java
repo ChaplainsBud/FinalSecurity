@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,22 +26,8 @@ public class HomeController {
     @Autowired
     MessageRepository messageRepository;
 
-    @Autowired
-    CloudinaryConfig cloudc;
-
-    @RequestMapping("/")
-    public String listMessages(Model model) {
-        model.addAttribute("messages", messageRepository.findAll());
-        if (userService.getUser() != null) {
-            model.addAttribute("user_id", userService.getUser().getId());
-        }
-        return "index";
-    }
-
-//    @RequestMapping("/")
-//    public String index() {
-//        return "index";
-//    }
+//    @Autowired
+//    CloudinaryConfig cloudc;
     @GetMapping("/register")
     public String showRegistrationPage(Model model) {
         model.addAttribute("user", new User());
@@ -63,31 +50,72 @@ public class HomeController {
         return "index";
     }
 
+    @RequestMapping("/")
+    public String listMessages(Principal principal, Model model) {
+        if(userService.getUser() != null) {
+            model.addAttribute("myuser", userService.getUser());
+            String username = principal.getName();
+            model.addAttribute("user", userRepository.findByUsername(username));
+        }
+        model.addAttribute("messages", messageRepository.findAll());
+        return "index";
+    }
+
+
+
+//    @GetMapping("/add")
+//    public String messageForm(Principal principal, Model model) {
+//        String username = principal.getName();
+//        model.addAttribute("user", userRepository.findByUsername(username));
+//        model.addAttribute("message", new Message());
+//        return "messageform";
+//    }
+
+//    @GetMapping("/add")
+//    public String messageForm(Model model, Principal principal){
+//        model.addAttribute("message", new Message());
+////        model.addAttribute("users", userRepository.findAll());
+////        model.addAttribute("user_id",userRepository.findByUsername(principal.getName()).getId());
+//        return "messageform";
+//    }
+
+//    @GetMapping("/add")
+//    public String messageForm(Model model, Principal principal){
+//        model.addAttribute("message", new Message());
+//        model.addAttribute("users", userRepository.findAll());
+//        model.addAttribute("user_id",userRepository.findByUsername(principal.getName()).getId());
+//        return "messageform";
+//    }
     @GetMapping("/add")
-    public String messageForm(Principal principal, Model model) {
-        String username = principal.getName();
-        model.addAttribute("user", userRepository.findByUsername(username));
+    public String messageForm(Model model) {
+//        model.addAttribute("myuser", userService.getUser());
+//        model.addAttribute("user", userService.getUser());
         model.addAttribute("message", new Message());
         return "messageform";
     }
 
     @PostMapping("/process")
-    public String processForm(@ModelAttribute Message message, @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return "redirect:/add";
-        }
-        try {
-            Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
-            message.setPic(uploadResult.get("url").toString());
-            messageRepository.save(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "redirect:/add";
-        }
-
-        //messageRepository.save(message);
+    public String processForm(@ModelAttribute Message message, Model model) {
+//        model.addAttribute("myuser", userService.getUser());
+//        model.addAttribute("user", userService.getUser());
+//        if (file.isEmpty()) {
+//            return "redirect:/add";
+//        }
+//        try {
+//            Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
+//            message.setPic(uploadResult.get("url").toString());
+//            messageRepository.save(message);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return "redirect:/add";
+//        }
+//        User user = userRepository.findById(message_user_id).get();
+//        message.setUser(user);
+        message.setUser(userService.getUser());
+        messageRepository.save(message);
         return "redirect:/";
     }
+
     @RequestMapping("/login")
     public String login() {
         return "login";

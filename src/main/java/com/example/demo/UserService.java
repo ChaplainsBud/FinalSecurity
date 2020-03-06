@@ -36,10 +36,11 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    // Returns the currently logged in User object
     public User getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        return userRepository.findByUsername(currentUser);
+        String currentUserName = authentication.getName();
+        return userRepository.findByUsername(currentUserName);
     }
 
     public void saveUser(User user) {
