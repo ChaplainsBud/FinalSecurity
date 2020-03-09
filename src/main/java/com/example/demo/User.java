@@ -41,8 +41,8 @@ public class User {
     private Set<Message> messages;
 
     public User() {
-        roles = new HashSet<>();
-        messages = new HashSet<>();
+//        roles = new HashSet<>();
+//        messages = new HashSet<>();
     }
 
     public User(String email, String password, String firstName, String lastName, boolean enabled, String username) {

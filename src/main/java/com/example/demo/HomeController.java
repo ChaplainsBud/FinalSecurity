@@ -1,18 +1,15 @@
 package com.example.demo;
 
-import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.security.Principal;
-import java.util.Map;
+import java.util.ArrayList;
 
 @Controller
 public class HomeController {
@@ -47,45 +44,23 @@ public class HomeController {
             userService.saveUser(user);
             model.addAttribute("message", "User Account Created");
         }
-        return "index";
+        return "redirect:/";
     }
 
     @RequestMapping("/")
     public String listMessages(Principal principal, Model model) {
         if(userService.getUser() != null) {
-            model.addAttribute("myuser", userService.getUser());
-            String username = principal.getName();
-            model.addAttribute("user", userRepository.findByUsername(username));
+//            model.addAttribute("myuser", userService.getUser());
+//            String username = principal.getName();
+//            model.addAttribute("user", userRepository.findByUsername(username));
+            model.addAttribute("user_id", userService.getUser().getId());
         }
         model.addAttribute("messages", messageRepository.findAll());
+//        model.addAttribute("users", userRepository.findAll());
         return "index";
     }
 
 
-
-//    @GetMapping("/add")
-//    public String messageForm(Principal principal, Model model) {
-//        String username = principal.getName();
-//        model.addAttribute("user", userRepository.findByUsername(username));
-//        model.addAttribute("message", new Message());
-//        return "messageform";
-//    }
-
-//    @GetMapping("/add")
-//    public String messageForm(Model model, Principal principal){
-//        model.addAttribute("message", new Message());
-////        model.addAttribute("users", userRepository.findAll());
-////        model.addAttribute("user_id",userRepository.findByUsername(principal.getName()).getId());
-//        return "messageform";
-//    }
-
-//    @GetMapping("/add")
-//    public String messageForm(Model model, Principal principal){
-//        model.addAttribute("message", new Message());
-//        model.addAttribute("users", userRepository.findAll());
-//        model.addAttribute("user_id",userRepository.findByUsername(principal.getName()).getId());
-//        return "messageform";
-//    }
     @GetMapping("/add")
     public String messageForm(Model model) {
 //        model.addAttribute("myuser", userService.getUser());
@@ -96,21 +71,7 @@ public class HomeController {
 
     @PostMapping("/process")
     public String processForm(@ModelAttribute Message message, Model model) {
-//        model.addAttribute("myuser", userService.getUser());
-//        model.addAttribute("user", userService.getUser());
-//        if (file.isEmpty()) {
-//            return "redirect:/add";
-//        }
-//        try {
-//            Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
-//            message.setPic(uploadResult.get("url").toString());
-//            messageRepository.save(message);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return "redirect:/add";
-//        }
-//        User user = userRepository.findById(message_user_id).get();
-//        message.setUser(user);
+
         message.setUser(userService.getUser());
         messageRepository.save(message);
         return "redirect:/";
@@ -121,11 +82,40 @@ public class HomeController {
         return "login";
     }
 
+//    @RequestMapping("/logout")
+//    public String logout() {
+//        return "redirect:/";
+//    }
+
     @RequestMapping("/secure")
     public String secure(Principal principal, Model model) {
         String username = principal.getName();
         model.addAttribute("user", userRepository.findByUsername(username));
         return "secure";
+    }
+
+    @RequestMapping("/mymessages")
+    public String myMessage(Principal principal, Model model) {
+        User user = userService.getUser();
+        ArrayList<Message> messages = (ArrayList<Message>) messageRepository.findByUser(user);
+        model.addAttribute("messages", messages);
+
+//        if(userService.getUser() != null) {
+//            String username = principal.getName();
+//            model.addAttribute("user", userRepository.findByUsername(username));
+//            model.addAttribute("user_id", userService.getUser().getId());
+//        }
+        return "mymessages";
+    }
+
+    @RequestMapping("/allmessages")
+    public String allMessages(Model model) {
+        if (userService.getUser() != null) {
+            model.addAttribute("user_id", userService.getUser().getId());
+        }
+        model.addAttribute("messages", messageRepository.findAll());
+//        model.addAttribute("users", userRepository.findAll());
+        return "allmessages";
     }
 
     @RequestMapping("/detail/{id}")
@@ -141,8 +131,17 @@ public class HomeController {
     }
 
     @RequestMapping("/delete/{id}")
-    public String delMessage(@PathVariable("id") long id) {
+    public String delMessage(@PathVariable("id") long id, Authentication auth) {
         messageRepository.deleteById(id);
-        return "redirect:/";
+//        System.out.println(auth.getAuthorities().toString());
+        if (auth.getAuthorities().toString().equals("[ADMIN]")) {
+//            return "redirect:/allmessages";
+            System.out.println("true");
+            return "redirect:/allmessages";
+        }
+        else {
+            return "redirect:/mymessages";
+        }
+//        return "redirect:/";
     }
 }
