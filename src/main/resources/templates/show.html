@@ -7,10 +7,10 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-    <a href="/">Show All Messages</a><br />
-    <a href="/add">Add a Message</a><br />
-    Content :<span th:text="${message.content}" ></span><br />
-    Sent By :<span th:text="${message.user.username}" ></span><br />
+    <a href="/">Show All Orders</a><br />
+    <a href="/add">Add an Order</a><br />
+    Content :<span th:text="${order.dough}" ></span><br />
+    Sent By :<span th:text="${order.user.username}" ></span><br />
 <!--    Picture :<span th:text="${message.pic}" ></span><br />-->
     <a th:href="@{/delete/{id}(id=${message.id})}">Delete this message</a>
 

@@ -38,7 +38,7 @@ public class User {
     private Collection<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Message> messages;
+    private Collection<XOrder> orders;
 
     public User() {
 //        roles = new HashSet<>();
@@ -119,12 +119,12 @@ public class User {
         this.roles = roles;
     }
 
-    public Set<Message> getMessages() {
-        return messages;
+    public Collection<XOrder> getOrders() {
+        return orders;
     }
 
-    public void setMessages(Set<Message> messages) {
-        this.messages = messages;
+    public void setOrders(Collection<XOrder> orders) {
+        this.orders = orders;
     }
 }
 

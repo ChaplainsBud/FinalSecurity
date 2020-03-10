@@ -13,9 +13,6 @@ import java.util.Set;
 public class DataLoader implements CommandLineRunner {
 
     @Autowired
-    MessageRepository messageRepository;
-
-    @Autowired
     UserRepository userRepository;
 
     @Autowired
